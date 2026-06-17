@@ -1,131 +1,380 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Portfolio</title>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="mediaqueries.css" />
-  </head>
-  <body>
-    <nav id="desktop-nav">
-      <div class="logo">Winta Ataklti</div>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects — Winta Ataklti</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="nav.css" />
+  <style>
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 1; opacity: 0.45;
+    }
+    .page-wrap { padding-top: var(--nav-h); position: relative; z-index: 2; }
+
+    .page-header {
+      padding: 5rem 4rem 3rem;
+      border-bottom: 1px solid var(--cream-ghost);
+      display: flex; align-items: flex-end;
+      justify-content: space-between; gap: 2rem;
+    }
+    .page-tag { display: inline-flex; align-items: center; gap: 0.8rem; margin-bottom: 1.2rem; }
+    .page-tag-line { width: 30px; height: 1px; background: var(--gold); }
+    .page-tag-text { font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
+    .page-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.8rem, 6vw, 5rem); font-weight: 700; line-height: 1.0; color: var(--cream); }
+    .page-title span { color: var(--cream-dim); font-weight: 300; font-style: italic; }
+    .page-num { font-family: 'Cormorant Garamond', serif; font-size: 5rem; font-weight: 700; color: var(--cream-ghost); line-height: 1; user-select: none; }
+
+    /* ── FILTER TABS ── */
+    .filter-bar {
+      padding: 2rem 4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--cream-ghost);
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 0.45rem 1.1rem;
+      background: transparent;
+      color: var(--cream-dim);
+      border: 1px solid var(--cream-ghost);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: none;
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover { color: var(--cream); border-color: var(--cream-faint); }
+    .filter-btn.active { background: var(--gold); color: var(--dark); border-color: var(--gold); }
+
+    /* ── PROJECTS GRID ── */
+    .projects-grid {
+      padding: 3rem 4rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 2rem;
+    }
+
+    .project-card {
+      border: 1px solid var(--cream-ghost);
+      overflow: hidden;
+      position: relative;
+      transition: border-color 0.25s, transform 0.25s;
+      cursor: none;
+    }
+    .project-card:hover {
+      border-color: rgba(201,169,110,0.35);
+      transform: translateY(-4px);
+    }
+
+    /* Image / preview area */
+    .project-img {
+      width: 100%; height: 220px;
+      position: relative;
+      overflow: hidden;
+    }
+    .project-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+      display: block;
+    }
+    .project-card:hover .project-img img { transform: scale(1.04); }
+
+    .project-placeholder {
+      width: 100%; height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      position: relative;
+    }
+    .pp-1 { background: linear-gradient(135deg, #1a1428 0%, #0f0f1a 100%); }
+    .pp-2 { background: linear-gradient(135deg, #0f1a14 0%, #080810 100%); }
+    .pp-3 { background: linear-gradient(135deg, #1a100f 0%, #0f0810 100%); }
+    .pp-4 { background: linear-gradient(135deg, #141428 0%, #0a0a18 100%); }
+
+    .pp-icon {
+      font-size: 2.5rem;
+      opacity: 0.25;
+    }
+    .pp-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--cream-faint);
+    }
+
+    /* Hover overlay */
+    .project-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(8,8,16,0.82);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .project-card:hover .project-overlay { opacity: 1; }
+    .overlay-btn {
+      padding: 0.55rem 1.2rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 2px;
+      cursor: none;
+      transition: opacity 0.2s;
+    }
+    .overlay-btn-gold { background: var(--gold); color: var(--dark); border: none; }
+    .overlay-btn-ghost { background: transparent; color: var(--cream); border: 1px solid var(--cream-faint); }
+    .overlay-btn:hover { opacity: 0.85; }
+
+    /* Card body */
+    .project-body { padding: 1.5rem; }
+    .project-cat {
+      font-size: 0.64rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+    .project-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem; font-weight: 600;
+      color: var(--cream); margin-bottom: 0.6rem; line-height: 1.2;
+    }
+    .project-desc {
+      font-size: 0.82rem; line-height: 1.75;
+      color: var(--cream-dim); font-weight: 300;
+      margin-bottom: 1.2rem;
+    }
+    .project-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    .project-tag {
+      font-size: 0.66rem;
+      color: var(--cream-faint);
+      border: 1px solid var(--cream-ghost);
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+    }
+
+    /* Coming soon card */
+    .project-card.coming-soon {
+      border-style: dashed;
+      opacity: 0.5;
+    }
+    .project-card.coming-soon:hover { transform: none; border-color: var(--cream-ghost); }
+
+    @media (max-width: 768px) {
+      .page-header { padding: 3rem 1.5rem 2rem; flex-direction: column; }
+      .page-num { display: none; }
+      .filter-bar { padding: 1.5rem; }
+      .projects-grid { padding: 2rem 1.5rem; grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <nav class="site-nav" id="siteNav">
+    <a href="index.html" class="nav-logo">Winta<span class="logo-dot">.</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      <li><a href="about.html" class="nav-link">About</a></li>
+      <li><a href="experience.html" class="nav-link">Experience</a></li>
+      <li><a href="projects.html" class="nav-link">Projects</a></li>
+      <li><a href="contact.html" class="nav-link">Contact</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <span class="ham-bar"></span><span class="ham-bar"></span><span class="ham-bar"></span>
+    </button>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <ul class="mobile-links">
+      <li><a href="index.html" class="mob-link">Home</a></li>
+      <li><a href="about.html" class="mob-link">About</a></li>
+      <li><a href="experience.html" class="mob-link">Experience</a></li>
+      <li><a href="projects.html" class="mob-link">Projects</a></li>
+      <li><a href="contact.html" class="mob-link">Contact</a></li>
+    </ul>
+    <div class="mob-footer">
+      <a href="https://www.linkedin.com/in/winta-ataklti-277938377/" target="_blank" class="mob-social">LinkedIn</a>
+      <span class="mob-social-sep">·</span>
+      <a href="https://github.com/1Winta" target="_blank" class="mob-social">GitHub</a>
+    </div>
+  </div>
+  <div class="menu-overlay" id="menuOverlay"></div>
+
+  <div class="page-wrap">
+    <header class="page-header">
       <div>
-        <ul class="nav-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="about.html" >About Me</a></li>
-          <li><a href="experience.html">Experience</a></li>
-          <li><a href="projects.html"class="active">Projects</a></li>
-          <li><a href="contact.html">Contact</a></li>
-        </ul>
+        <div class="page-tag"><span class="page-tag-line"></span><span class="page-tag-text">My work</span></div>
+        <h1 class="page-title">Pro<span>jects</span></h1>
       </div>
-    </nav>
-    <nav id="hamburger-nav">
-      <div class="logo">Winta Ataklti</div>
-      <div class="hamburger-menu">
-        <div class="hamburger-icon" onclick="toggleMenu()">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-        <div class="menu-links">
-          <li><a href="index.html" onclick="toggleMenu()">Home</a></li>
-          <li><a href="about.html" onclick="toggleMenu()">About Me</a></li>
-          <li><a href="experience.html" onclick="toggleMenu()">Experience</a></li>
-          <li><a href="projects.html" onclick="toggleMenu()">Projects</a></li>
-          <li><a href="contact.html" onclick="toggleMenu()">Contact</a></li>
-        </div>
-      </div>
-    </nav>
-     </section>
-<section id="projects">
-      <p class="section__text__p1">Browse My Recent</p>
-      <h1 class="title">Projects</h1>
-      <div class="experience-details-container">
-        <div class="about-containers">
-          <div class="details-container color-container">
-            <div class="article-container">
-              <img
-                src="./assets/finsight.jpg"
-                alt="Project 1"
-                class="project-img"
-              />
-            </div>
-            <h2 class="experience-sub-title project-title">Project One</h2>
-            <div class="btn-container">
-              <button
-                class="btn btn-color-2 project-btn"
-                onclick="location.href='https://finsight-psi.vercel.app/'"
-              >
-                Live Demo
-              </button>
-              <button
-                class="btn btn-color-2 project-btn"
-                onclick="location.href='https://www.figma.com/design/WSvAfHfg3efKGXD3OYCrdw/finsight?node-id=0-1&p=f&t=DPVmLK5Sy5MruvLa-0'"
-              >
-                Figma Design
-              </button>
-            </div>
+      <span class="page-num">03</span>
+    </header>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterProjects('all', this)">All</button>
+      <button class="filter-btn" onclick="filterProjects('graphics', this)">Graphics</button>
+      <button class="filter-btn" onclick="filterProjects('ui-ux', this)">UI / UX</button>
+      <button class="filter-btn" onclick="filterProjects('frontend', this)">Frontend</button>
+    </div>
+
+    <div class="projects-grid" id="projectsGrid">
+
+      <!-- Project 1 — placeholder: Brand Identity -->
+      <div class="project-card" data-cat="graphics">
+        <div class="project-img">
+          <!-- Replace with: <img src="./assets/project-brand.jpg" alt="Brand Identity Project" /> -->
+          <div class="project-placeholder pp-1">
+            <span class="pp-icon">✦</span>
+            <span class="pp-label">Brand Identity</span>
           </div>
-          <div class="details-container color-container">
-            <div class="article-container">
-              <img
-                src="./assets/project-2.jpg"
-                alt="Project 2"
-                class="project-img"
-              />
-            </div>
-            <h2 class="experience-sub-title project-title">Project Two</h2>
-            <div class="btn-container">
-              <button
-                class="btn btn-color-2 project-btn"
-                onclick="location.href='https://github.com/1Winta/migbebet'"
-              >
-                Github
-              </button>
-              <button
-                class="btn btn-color-2 project-btn"
-                onclick="location.href='./assets/Amarach Restaurant.mp4'"
-              >
-                 Demo
-              </button>
-            </div>
+          <div class="project-overlay">
+            <a href="#" class="overlay-btn overlay-btn-gold">View Project</a>
+            <a href="#" class="overlay-btn overlay-btn-ghost">Live Demo</a>
           </div>
-          <div class="details-container color-container">
-            <div class="article-container">
-              <img
-                src="./assets/project3.jpg"
-                alt="Project 3"
-                class="project-img"
-              />
-            </div>
-            <h2 class="experience-sub-title project-title">Project Three</h2>
-            <div class="btn-container">
-              <button
-                class="btn btn-color-2 project-btn"
-                onclick="location.href='https://github.com/1Winta/Amh_tp'"
-              >
-                Github
-              </button>
-              <button
-                class="btn btn-color-2 project-btn"
-                onclick="location.href='./assets/project-3.mp4'"
-              >
-                Demo
-              </button>
-            </div>
+        </div>
+        <div class="project-body">
+          <p class="project-cat">Graphics Design</p>
+          <h3 class="project-title"><!-- Brand Name --> Brand Identity</h3>
+          <p class="project-desc">Full brand identity design including logo system, colour palette, typography, and brand guidelines for <!-- client/industry -->.</p>
+          <div class="project-tags">
+            <span class="project-tag">Logo Design</span>
+            <span class="project-tag">Brand Guidelines</span>
+            <span class="project-tag">Illustrator</span>
           </div>
         </div>
       </div>
-      <img
-        src="./assets/arrow.png"
-        alt="Arrow icon"
-        class="icon arrow"
-        onclick="location.href='./#contact'"
-      />
+
+      <!-- Project 2 — placeholder: UI/UX App -->
+      <div class="project-card" data-cat="ui-ux">
+        <div class="project-img">
+          <div class="project-placeholder pp-2">
+            <span class="pp-icon">⬡</span>
+            <span class="pp-label">App Design</span>
+          </div>
+          <div class="project-overlay">
+            <a href="#" class="overlay-btn overlay-btn-gold">View Case Study</a>
+            <a href="#" class="overlay-btn overlay-btn-ghost">Figma Prototype</a>
+          </div>
+        </div>
+        <div class="project-body">
+          <p class="project-cat">UI / UX Design</p>
+          <h3 class="project-title"><!-- App Name --> Mobile App</h3>
+          <p class="project-desc">End-to-end UI/UX design for a <!-- type of app --> app. Includes user research, wireframes, and high-fidelity prototype.</p>
+          <div class="project-tags">
+            <span class="project-tag">Figma</span>
+            <span class="project-tag">Wireframing</span>
+            <span class="project-tag">Prototyping</span>
+          </div>
+        </div>
       </div>
-    </section>
-        <script src="script.js"></script> 
+
+      <!-- Project 3 — placeholder: Frontend -->
+      <div class="project-card" data-cat="frontend">
+        <div class="project-img">
+          <div class="project-placeholder pp-3">
+            <span class="pp-icon">◈</span>
+            <span class="pp-label">Web Project</span>
+          </div>
+          <div class="project-overlay">
+            <a href="#" class="overlay-btn overlay-btn-gold">View Site</a>
+            <a href="https://github.com/1Winta" class="overlay-btn overlay-btn-ghost">GitHub</a>
+          </div>
+        </div>
+        <div class="project-body">
+          <p class="project-cat">Frontend Development</p>
+          <h3 class="project-title"><!-- Project Name --></h3>
+          <p class="project-desc"><!-- Describe the website or web app, what it does and what you built. --></p>
+          <div class="project-tags">
+            <span class="project-tag">HTML</span>
+            <span class="project-tag">CSS</span>
+            <span class="project-tag">JavaScript</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 4 — placeholder: Poster / Print -->
+      <div class="project-card" data-cat="graphics">
+        <div class="project-img">
+          <div class="project-placeholder pp-4">
+            <span class="pp-icon">▲</span>
+            <span class="pp-label">Print Design</span>
+          </div>
+          <div class="project-overlay">
+            <a href="#" class="overlay-btn overlay-btn-gold">View Work</a>
+          </div>
+        </div>
+        <div class="project-body">
+          <p class="project-cat">Graphics Design</p>
+          <h3 class="project-title"><!-- Poster / Print Series Name --></h3>
+          <p class="project-desc"><!-- Describe the poster series, event material, or print project. --></p>
+          <div class="project-tags">
+            <span class="project-tag">Photoshop</span>
+            <span class="project-tag">Print Design</span>
+            <span class="project-tag">Typography</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coming soon cards -->
+      <div class="project-card coming-soon" data-cat="ui-ux">
+        <div class="project-img">
+          <div class="project-placeholder pp-1">
+            <span class="pp-icon">…</span>
+            <span class="pp-label">Coming Soon</span>
+          </div>
+        </div>
+        <div class="project-body">
+          <p class="project-cat">UI / UX Design</p>
+          <h3 class="project-title">New Project in Progress</h3>
+          <p class="project-desc">Currently working on something exciting. Check back soon.</p>
+        </div>
+      </div>
+
+      <div class="project-card coming-soon" data-cat="graphics">
+        <div class="project-img">
+          <div class="project-placeholder pp-2">
+            <span class="pp-icon">…</span>
+            <span class="pp-label">Coming Soon</span>
+          </div>
+        </div>
+        <div class="project-body">
+          <p class="project-cat">Graphics Design</p>
+          <h3 class="project-title">New Project in Progress</h3>
+          <p class="project-desc">A new graphics project is being prepared for this portfolio.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="nav.js"></script>
+  <script>
+    function filterProjects(cat, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.project-card').forEach(card => {
+        const match = cat === 'all' || card.dataset.cat === cat;
+        card.style.display = match ? '' : 'none';
+      });
+    }
+  </script>
 </body>
 </html>
